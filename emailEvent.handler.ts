@@ -1,5 +1,5 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 
 export const emailEventHandler: APIGatewayProxyHandler = async (
   event: any,
