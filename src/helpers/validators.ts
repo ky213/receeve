@@ -3,7 +3,7 @@ import { EmailEventValidator, IVendorEmailEvent } from 'types/emailEvent.interfa
 
 const crypto = require('crypto');
 
-export const verify: EmailEventValidator = (data: IVendorEmailEvent): boolean => {
+export const verifyEmailEvent: EmailEventValidator = (data: IVendorEmailEvent): boolean => {
   const {
     signature: { timestamp, token, signature },
   } = data;

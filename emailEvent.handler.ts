@@ -1,20 +1,25 @@
 import 'source-map-support/register';
-import { APIGatewayProxyHandler } from 'aws-lambda';
+import { DynamoDB } from 'aws-sdk';
+import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
 
-export const emailEventHandler: APIGatewayProxyHandler = async (
-  event: any,
-  _context
-) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message:
-          'Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+import { EmailEvent } from 'entities';
+import { EmailEventsTable } from 'services';
+import { databaseAdapter } from 'adapters';
+import { verifyEmailEvent } from 'helpers';
+
+const client = databaseAdapter({ client: DynamoDB.DocumentClient });
+
+export const emailEventHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
+  try {
+    const body = JSON.parse(event.body);
+    const emailEvent = new EmailEvent({ emailEvent: body, validator: verifyEmailEvent });
+    const emailEventsTable = new EmailEventsTable({ instance: emailEvent, client });
+
+    await emailEventsTable.saveEvent();
+  } catch (error) {
+    return {
+      statusCode: 400,
+      body: error.message,
+    };
+  }
 };
