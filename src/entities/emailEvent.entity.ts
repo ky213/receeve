@@ -4,7 +4,7 @@ export interface IEmailEventProps {
   emailEvent: IVendorEmailEvent;
   validator: EmailEventValidator;
 }
-export class Email {
+export class EmailEvent {
   public readonly emailEvent: IEmailEvent;
 
   constructor({ emailEvent, validator }: IEmailEventProps) {
@@ -21,4 +21,6 @@ export class Email {
     timestamp: emailEvent['event-data'].timestamp,
     type: emailEvent['event-data'].event,
   });
+
+  getEmailEvent = () => this.emailEvent;
 }
