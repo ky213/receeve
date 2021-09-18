@@ -8,7 +8,7 @@ services:
       - '127.0.0.1:4510-4530:4510-4530'
       - '127.0.0.1:4566-4620:4566-4620'
     environment:
-      - LOCALSTACK_API_KEY=...
+      # - LOCALSTACK_API_KEY=API_KEY
       - SERVICES=serverless,lambda,Dynamo,sns,APIGateway,Route53
       - DEBUG=1
       - DATA_DIR=/tmp/localstack/data

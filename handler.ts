@@ -3,28 +3,37 @@ import { DynamoDB } from 'aws-sdk';
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
 
 import { EmailEvent } from './src/entities';
-import { EmailEventsTable } from './src/services';
-import { databaseAdapter } from './src/adapters';
+import { EmailEventModel } from './src/models';
 import { verifyEmailEvent } from './src/helpers';
 
 export const emailEventHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
   try {
+    //Parse data
     const body = JSON.parse(event.body);
-    const emailEvent = new EmailEvent({ emailEvent: body, validator: verifyEmailEvent });
-    const client = databaseAdapter({ client: DynamoDB.DocumentClient });
-    const emailEventsTable = new EmailEventsTable({ instance: emailEvent, client });
 
-    await emailEventsTable.saveEvent();
+    //create emailEvent object
+    const emailEvent = new EmailEvent({ emailEvent: body, validator: verifyEmailEvent });
+
+    //create the emailEvent model
+    const emailEventModel = new EmailEventModel({
+      client: new DynamoDB.DocumentClient({
+        region: 'us-east-1',
+        endpoint: 'http://localhost:4566',
+      }),
+    });
+
+    //save object to database
+    await emailEventModel.save(emailEvent.getEmailEvent());
 
     return {
       statusCode: 200,
-      body: 'emailevent processed successfully',
+      body: 'done',
     };
   } catch (error) {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        message: 'failed to process email event',
+        message: 'failed',
         reason: error.message,
       }),
     };

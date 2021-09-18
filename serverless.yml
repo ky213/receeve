@@ -22,10 +22,12 @@ provider:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
 
 functions:
   emailEvent:
     handler: handler.emailEventHandler
+    timeout: 30
     events:
       - http:
           method: post
