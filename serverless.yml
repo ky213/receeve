@@ -1,17 +1,19 @@
-service:
-  name: receeve
-# app and org for use with dashboard.serverless.com
-#app: your-app-name
-#org: your-org-name
+service: receeve
 
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+  localstack:
+    debug: true
+    stages:
+      - local
+      - dev
 
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
+  - serverless-localstack
 
 provider:
   name: aws
@@ -22,9 +24,9 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 functions:
-  hello:
-    handler: handler.hello
+  emailEvent:
+    handler: handler.emailEventHandler
     events:
       - http:
-          method: get
-          path: hello
+          method: post
+          path: emailevent

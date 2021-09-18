@@ -1,7 +1,7 @@
 import { DynamoDB } from 'aws-sdk';
 
-import { EmailEvent } from 'entities';
-import { DatabaseAdapter } from 'adapters';
+import { EmailEvent } from '../entities';
+import { DatabaseAdapter } from '../adapters';
 
 const USERS_TABLE = process.env.USERS_TABLE;
 export interface IEmailEventsTableProps {

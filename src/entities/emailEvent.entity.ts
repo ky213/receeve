@@ -1,5 +1,5 @@
-import { EMAIL_PROVIDER } from 'config/contants';
-import { EmailEventValidator, IEmailEvent, IVendorEmailEvent } from 'types/emailEvent.interface';
+import { EMAIL_PROVIDER } from '../config/contants';
+import { EmailEventValidator, IEmailEvent, IVendorEmailEvent } from '../types/emailEvent.interface';
 export interface IEmailEventProps {
   emailEvent: IVendorEmailEvent;
   validator: EmailEventValidator;

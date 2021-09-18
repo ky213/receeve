@@ -1,5 +1,5 @@
-import { SIGNING_KEY } from 'config/contants';
-import { EmailEventValidator, IVendorEmailEvent } from 'types/emailEvent.interface';
+import { SIGNING_KEY } from '../config/contants';
+import { EmailEventValidator, IVendorEmailEvent } from '../types/emailEvent.interface';
 
 const crypto = require('crypto');
 
@@ -13,5 +13,5 @@ export const verifyEmailEvent: EmailEventValidator = (data: IVendorEmailEvent): 
     .update(timestamp.concat(token))
     .digest('hex');
 
-  return encodedToken === signature;
+  return encodedToken !== signature;
 };
