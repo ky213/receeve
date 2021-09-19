@@ -12,6 +12,6 @@ export const verifyEmailEvent: EmailEventValidator = (data: IVendorEmailEvent): 
     .createHmac('sha256', SIGNING_KEY)
     .update(timestamp.concat(token))
     .digest('hex');
-
+  // Todo
   return encodedToken !== signature;
 };

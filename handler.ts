@@ -4,25 +4,28 @@ import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
 
 import { EmailEvent } from './src/entities';
 import { EmailEventModel } from './src/models';
-import { verifyEmailEvent } from './src/helpers';
+import { verifyEmailEvent as validator } from './src/helpers';
 
 export const emailEventHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
   try {
     //Parse data
-    const body = JSON.parse(event.body);
+    const emailEventBody = JSON.parse(event.body);
 
     //create emailEvent object
-    const emailEvent = new EmailEvent({ emailEvent: body, validator: verifyEmailEvent });
+    const emailEventObject = new EmailEvent({ emailEventBody, validator });
 
     //create the emailEvent model
     const emailEventModel = new EmailEventModel({
       client: new DynamoDB.DocumentClient({
-        endpoint: `http://${process.env.LOCALSTACK_HOSTNAME}:4566`,
+        endpoint: process.env.DB_ENDPOINT,
+        region: 'localhost',
       }),
     });
 
     //save object to database
-    await emailEventModel.save(emailEvent.getEmailEvent());
+    await emailEventModel.save(emailEventObject.getEmailEvent());
+
+    //publish object
 
     return {
       statusCode: 200,
@@ -33,7 +36,7 @@ export const emailEventHandler: APIGatewayProxyHandler = async (event: APIGatewa
       statusCode: 400,
       body: JSON.stringify({
         message: 'failed',
-        reason: error.message,
+        reason: error,
       }),
     };
   }

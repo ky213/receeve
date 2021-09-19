@@ -2,12 +2,17 @@ service: receeve
 
 provider:
   name: aws
+  region: us-east-1
+  stage: ${opt:stage, "local"}
+  profile: default
   runtime: nodejs12.x
   apiGateway:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
+    # TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
+    TABLE_NAME: 'EmailEvents'
+    DB_ENDPOINT: 'http://localhost:4002'
   iam:
     role:
       statements:
@@ -19,8 +24,16 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource:
-            - Fn::GetAtt: [EmailEventsTable, Arn]
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - lambda:InvokeFunction
+            - lambda:InvokeAsync
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - SNS:Publish
+          Resource: '*'
 
 functions:
   emailEvent:
@@ -30,6 +43,7 @@ functions:
       - http:
           method: post
           path: emailevent
+          cors: true
 
 resources:
   Resources:
@@ -42,22 +56,30 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        TableName: ${self:provider.environment.TABLE_NAME}
+        TableName: 'EmailEvents'
 
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
-  localstack:
+    keepOutputDirectory: true
+  serverless-offline:
+    httpPort: 4000
+  serverless-offline-sns:
+    port: 4001
     debug: true
+  dynamodb:
     stages:
       - local
-  # iamRoleStatements:
-  #   - Effect: Allow
-  #     Action:
-  #       - dynamodb:PutItem
-  #     Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TABLE_NAME}'
+    start:
+      port: 4002
+      inMemory: true
+      noStart: true
+    migration:
+      dir: offline/migrations
 
 plugins:
   - serverless-webpack
-  - serverless-localstack
+  - serverless-offline
+  - serverless-offline-sns
+  - serverless-dynamodb-local

@@ -1,5 +1,6 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb.d';
-import { IEmailEvent } from 'src/types/emailEvent.interface';
+import { getUUID } from '../helpers';
+import { IEmailEvent } from '../types/emailEvent.interface';
 
 export interface IDatabaseAdapterProps {
   client: DocumentClient | any;
@@ -16,7 +17,10 @@ export class EmailEventModel {
     return this.client
       .put({
         TableName: process.env.TABLE_NAME,
-        Item: object,
+        Item: {
+          id: getUUID(),
+          ...object,
+        },
       })
       .promise();
   }

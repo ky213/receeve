@@ -1,15 +1,15 @@
 import { EMAIL_PROVIDER } from '../config/contants';
 import { EmailEventValidator, IEmailEvent, IVendorEmailEvent } from '../types/emailEvent.interface';
 export interface IEmailEventProps {
-  emailEvent: IVendorEmailEvent;
+  emailEventBody: IVendorEmailEvent;
   validator: EmailEventValidator;
 }
 export class EmailEvent {
-  public readonly emailEvent: IEmailEvent;
+  public readonly emailEventBody: IEmailEvent;
 
-  constructor({ emailEvent, validator }: IEmailEventProps) {
-    this.validateEmailEvent(validator)(emailEvent);
-    this.emailEvent = this.normalizeEmaiEvent(emailEvent);
+  constructor({ emailEventBody, validator }: IEmailEventProps) {
+    this.validateEmailEvent(validator)(emailEventBody);
+    this.emailEventBody = this.normalizeEmaiEvent(emailEventBody);
   }
 
   validateEmailEvent = (validator: EmailEventValidator) => (emailEvent: IVendorEmailEvent) => {
@@ -22,5 +22,5 @@ export class EmailEvent {
     type: emailEvent['event-data'].event,
   });
 
-  getEmailEvent = () => this.emailEvent;
+  getEmailEvent = () => this.emailEventBody;
 }

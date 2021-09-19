@@ -1,18 +1,7 @@
-export type EmailProviders = 'MailGun';
-
-export type EmailEvents =
-  | 'delivered'
-  | 'failed'
-  | 'opened'
-  | 'clicked'
-  | 'unsubscribed'
-  | 'complained'
-  | 'stored';
-
 export interface IEmailEvent {
-  provider: EmailProviders;
+  provider: string;
   timestamp: number;
-  type: EmailEvents;
+  type: string;
 }
 
 export interface IVendorEmailEvent {
@@ -23,7 +12,7 @@ export interface IVendorEmailEvent {
   };
   'event-data': {
     id: string;
-    event: EmailEvents;
+    event: string;
     timestamp: number;
   };
 }
