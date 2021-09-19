@@ -11,6 +11,7 @@ provider:
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     # TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
+    SNS_ENDPOINT: 'http://localhost:4001'
     TABLE_NAME: 'EmailEvents'
     DB_ENDPOINT: 'http://localhost:4002'
   iam:
