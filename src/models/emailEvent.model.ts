@@ -1,12 +1,12 @@
-import { DynamoDB } from 'aws-sdk';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb.d';
 import { IEmailEvent } from 'src/types/emailEvent.interface';
 
 export interface IDatabaseAdapterProps {
-  client: DynamoDB.DocumentClient | any;
+  client: DocumentClient | any;
 }
 //Todo: singlton pattern
 export class EmailEventModel {
-  public client: DynamoDB.DocumentClient;
+  public client: DocumentClient;
 
   constructor({ client }: IDatabaseAdapterProps) {
     this.client = client;

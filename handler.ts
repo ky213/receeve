@@ -17,8 +17,7 @@ export const emailEventHandler: APIGatewayProxyHandler = async (event: APIGatewa
     //create the emailEvent model
     const emailEventModel = new EmailEventModel({
       client: new DynamoDB.DocumentClient({
-        region: 'us-east-1',
-        endpoint: 'http://localhost:4566',
+        endpoint: `http://${process.env.LOCALSTACK_HOSTNAME}:4566`,
       }),
     });
 
