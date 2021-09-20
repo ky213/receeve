@@ -1,6 +1,10 @@
 import 'source-map-support/register';
 import { DynamoDB, SNS } from 'aws-sdk';
-import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyHandler,
+  APIGatewayProxyResult,
+} from 'aws-lambda';
 
 import { EmailEvent } from './src/entities';
 import { EmailEventModel } from './src/models';
@@ -35,7 +39,7 @@ export type IInitRessources = ReturnType<typeof initRessources>;
 
 export const emailEventHandler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
-) => {
+): Promise<APIGatewayProxyResult> => {
   try {
     //Parse data
     const emailEventBody: IVendorEmailEvent = JSON.parse(event.body);

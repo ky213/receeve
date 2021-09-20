@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import { IInitRessources, initRessources } from '../../handler';
 import { emailEventBody } from './fakers';
 
@@ -15,6 +16,6 @@ describe('Notifications tests', () => {
       message: ressources.emailEventObject.getEmailEvent(),
     });
 
-    return expect(result?.MessageId).not.to.be.empty;
+    expect(result?.MessageId).not.to.be.empty;
   });
 });

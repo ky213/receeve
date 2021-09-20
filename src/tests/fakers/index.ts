@@ -1,3 +1,4 @@
+import { APIGatewayProxyEvent } from 'aws-lambda';
 import {
   IEmailEvent,
   IVendorEmailEvent,
@@ -23,4 +24,19 @@ export const emailEventBody: IVendorEmailEvent = {
     event: 'opened',
     timestamp: timeStamp,
   },
+};
+
+export const lambdaEvent: APIGatewayProxyEvent = {
+  body: JSON.stringify(emailEventBody),
+  headers: {},
+  multiValueHeaders: {},
+  httpMethod: 'post',
+  path: 'emailevent',
+  isBase64Encoded: false,
+  pathParameters: null,
+  queryStringParameters: null,
+  multiValueQueryStringParameters: null,
+  stageVariables: null,
+  requestContext: null,
+  resource: '',
 };
