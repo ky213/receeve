@@ -1,28 +1,28 @@
 # EmailEvents notifier with serverless framework and AWS
 
-
 ## Setup
 
 ```bash
 npm install
 ```
+
 # Serverless offline
 
 ## install local dynamoDB instance
 
 ```bash
-serverless dynamodb install 
+serverless dynamodb install
 ```
 
 ## start local dynamoDB instance
 
 ```bash
-serverless dynamodb start 
+serverless dynamodb start
 ```
 
-## crate  table
+## crate table
 
-after dynamodb started locally, go to http://localhost:4002/shell and create a receeve-emailevents-loca table using this schema:
+after dynamodb started locally, go to http://localhost:4002/shell and create a receeve-emailevents-local table using this schema:
 
 ```bash
 {
@@ -100,4 +100,3 @@ npm run test
 ```bash
 npm run test:offline
 ```
-
