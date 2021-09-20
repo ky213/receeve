@@ -6,14 +6,10 @@ provider:
   stage: ${opt:stage, "local"}
   profile: default
   runtime: nodejs12.x
-  apiGateway:
-    minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    # TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
-    SNS_ENDPOINT: 'http://localhost:4001'
-    TABLE_NAME: 'EmailEvents'
-    DB_ENDPOINT: 'http://localhost:4002'
+    TABLE_NAME: ${self:service}-emailevents-${opt:stage, self:provider.stage}
+
   iam:
     role:
       statements:
@@ -57,7 +53,7 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        TableName: 'EmailEvents'
+        TableName: ${self:provider.stage.environment.TABLE_NAME}
 
 custom:
   webpack:
@@ -75,9 +71,9 @@ custom:
     start:
       port: 4002
       inMemory: true
-      noStart: true
+      # noStart: true
     migration:
-      dir: offline/migrations
+      dir: src/migrations
 
 plugins:
   - serverless-webpack

@@ -4,12 +4,13 @@
   "description": "Serverless webpack example using Typescript",
   "main": "handler.js",
   "scripts": {
-    "build": "serverless webpack --stage local",
+    "build": "serverless webpack --stage staging",
     "deploy:local": "serverless deploy --stage local",
     "deploy:staging": "serverless deploy --stage staging",
     "watch": "nodemon -w src -e '.*' -x 'npm run build'",
     "start": "serverless offline start --stage local",
-    "test": "jest"
+    "test": "jest",
+    "test:offline": "IS_OFFLINE=true jest"
   },
   "dependencies": {
     "source-map-support": "^0.5.10"

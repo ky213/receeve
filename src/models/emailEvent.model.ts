@@ -1,4 +1,5 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb.d';
+import { EVENTS_TABLE_NAME } from '../config/contants';
 import { getUUID } from '../helpers';
 import { IEmailEvent } from '../types/emailEvent.interface';
 
@@ -16,7 +17,7 @@ export class EmailEventModel {
   save(object: IEmailEvent) {
     return this.client
       .put({
-        TableName: process.env.TABLE_NAME || 'EmailEvent',
+        TableName: EVENTS_TABLE_NAME,
         Item: {
           id: getUUID(),
           ...object,

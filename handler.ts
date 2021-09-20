@@ -11,6 +11,7 @@ import { EmailEventModel } from './src/models';
 import { verifyEmailEvent as validator } from './src/helpers';
 import { NotificationService } from './src/services';
 import { IVendorEmailEvent } from './src/types/emailEvent.interface';
+import { DynamoDBOptions, SNSOptions } from './src/config/contants';
 
 export const initRessources = (emailEventBody: IVendorEmailEvent) => {
   //create emailEvent object
@@ -18,18 +19,12 @@ export const initRessources = (emailEventBody: IVendorEmailEvent) => {
 
   //create the emailEvent model
   const emailEventModel = new EmailEventModel({
-    client: new DynamoDB.DocumentClient({
-      endpoint: process.env.DB_ENDPOINT,
-      region: process.env.REGION || 'localhost',
-    }),
+    client: new DynamoDB.DocumentClient(DynamoDBOptions),
   });
 
   // create notification service
   const notificationService = new NotificationService({
-    client: new SNS({
-      endpoint: process.env.SNS_ENDPOINT || 'http://localhost:4001',
-      region: process.env.REGION || 'localhost',
-    }),
+    client: new SNS(SNSOptions),
   });
 
   return { emailEventObject, notificationService, emailEventModel };
@@ -45,7 +40,7 @@ export const emailEventHandler: APIGatewayProxyHandler = async (
     const emailEventBody: IVendorEmailEvent = JSON.parse(event.body);
 
     // init ressources
-    const { emailEventObject, notificationService } =
+    const { emailEventObject, notificationService, emailEventModel } =
       initRessources(emailEventBody);
 
     //publish email event
@@ -53,8 +48,8 @@ export const emailEventHandler: APIGatewayProxyHandler = async (
       message: emailEventObject.getEmailEvent(),
     });
 
-    // save copy to database
-    // await emailEventModel.save(emailEventObject.getEmailEvent());
+    // save a copy to database
+    await emailEventModel.save(emailEventObject.getEmailEvent());
 
     return {
       statusCode: 200,
