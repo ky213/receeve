@@ -48,7 +48,7 @@ functions:
 
 resources:
   Resources:
-    EmailEventsTable:
+    EmailEvents:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
