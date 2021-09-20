@@ -31,7 +31,11 @@ export const initRessources = (emailEventBody: IVendorEmailEvent) => {
   return { emailEventObject, notificationService, emailEventModel };
 };
 
-export const emailEventHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
+export type IInitRessources = ReturnType<typeof initRessources>;
+
+export const emailEventHandler: APIGatewayProxyHandler = async (
+  event: APIGatewayProxyEvent
+) => {
   try {
     //Parse data
     const emailEventBody: IVendorEmailEvent = JSON.parse(event.body);
@@ -41,7 +45,9 @@ export const emailEventHandler: APIGatewayProxyHandler = async (event: APIGatewa
       initRessources(emailEventBody);
 
     //publish email event
-    await notificationService.publish({ message: emailEventObject.getEmailEvent() });
+    await notificationService.publish({
+      message: emailEventObject.getEmailEvent(),
+    });
 
     // save copy to database
     await emailEventModel.save(emailEventObject.getEmailEvent());

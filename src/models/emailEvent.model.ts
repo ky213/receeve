@@ -16,7 +16,7 @@ export class EmailEventModel {
   save(object: IEmailEvent) {
     return this.client
       .put({
-        TableName: process.env.TABLE_NAME,
+        TableName: process.env.TABLE_NAME || 'EmailEvent',
         Item: {
           id: getUUID(),
           ...object,
