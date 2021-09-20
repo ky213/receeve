@@ -23,7 +23,7 @@ export const initRessources = (emailEventBody: IVendorEmailEvent) => {
   // create notification service
   const notificationService = new NotificationService({
     client: new SNS({
-      endpoint: process.env.SNS_ENDPOINT,
+      endpoint: process.env.SNS_ENDPOINT || 'http://localhost:4001',
       region: process.env.REGION || 'localhost',
     }),
   });
@@ -41,7 +41,7 @@ export const emailEventHandler: APIGatewayProxyHandler = async (
     const emailEventBody: IVendorEmailEvent = JSON.parse(event.body);
 
     // init ressources
-    const { emailEventObject, notificationService, emailEventModel } =
+    const { emailEventObject, notificationService } =
       initRessources(emailEventBody);
 
     //publish email event
@@ -50,7 +50,7 @@ export const emailEventHandler: APIGatewayProxyHandler = async (
     });
 
     // save copy to database
-    await emailEventModel.save(emailEventObject.getEmailEvent());
+    // await emailEventModel.save(emailEventObject.getEmailEvent());
 
     return {
       statusCode: 200,
